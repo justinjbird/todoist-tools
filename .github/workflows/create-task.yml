@@ -31,5 +31,10 @@ jobs:
     steps:
       - name: Create task in Todoist
         run: |
-          curl -X POST https://api.todoist.com/rest/v2/tasks --data '{\"content\": \"${{ inputs.title }}\", \"description\":\"${{ inputs.description }}\", \"labels\": ${{ inputs.labels }}, \"priority\": ${{ inputs.priority }}, \"due_string\": \"${{ inputs.due_string }}\", \"project_id\": \"${{ inputs.project_id }}\"}' -H "Content-Type: application/json" -H "Authorization: Bearer ${{ secrets.token }}"
+          $output = (curl -X POST https://api.todoist.com/rest/v2/tasks --data '{\"content\": \"${{ inputs.title }}\", \"description\":\"${{ inputs.description }}\", \"labels\": ${{ inputs.labels }}, \"priority\": ${{ inputs.priority }}, \"due_string\": \"${{ inputs.due_string }}\", \"project_id\": \"${{ inputs.project_id }}\"}' -H "Content-Type: application/json" -H "Authorization: Bearer ${{ secrets.token }}"  -s -o response.txt -w "%{http_code}")
+          if ($output -eq 200) {
+          Get-Content response.txt
+          } else {
+              Write-Error "Unexpected response $output"
+          }
         shell: pwsh
