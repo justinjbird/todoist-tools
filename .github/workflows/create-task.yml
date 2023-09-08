@@ -1,0 +1,35 @@
+name: todoist-create-task
+
+on:
+  workflow_call:
+    inputs:
+      title:
+        required: true
+        type: string
+      description:
+        required: false
+        type: string
+      labels:
+        required: false
+        type: string
+      priority:
+        required: true
+        type: number
+      due_string:
+        required: false
+        type: string
+      project_id:
+        required: true
+        type: number
+    secrets:
+      token:
+        required: true
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create task in Todoist
+        run: |
+          curl -X POST https://api.todoist.com/rest/v2/tasks --data '{\"content\": \"${{ inputs.title }}\", \"description\":\"${{ inputs.description }}\", \"labels\": ${{ inputs.labels }}, \"priority\": ${{ inputs.priority }}, \"due_string\": \"${{ inputs.due_string }}\", \"project_id\": \"${{ inputs.project_id }}\"}' -H "Content-Type: application/json" -H "Authorization: Bearer ${{ secrets.token }}"
+        shell: pwsh
