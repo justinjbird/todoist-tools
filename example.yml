@@ -1,0 +1,17 @@
+name: notify-on-discussion
+
+on:
+  push: # whenever commit it pushed on this repository
+
+jobs:
+  new-task:
+    uses: justinjbird/todoist-tools/.github/workflows/create-task.yml@main
+    with:
+      title: Test comment
+      description: 
+      labels: '[\"web\",\"scheduled\"]'
+      priority: 2
+      due_string: today
+      project_id: 2287192456
+    secrets:
+      token: "${{ secrets.TODOIST_API_TOKEN }}"
