@@ -9,7 +9,7 @@ jobs:
     with:
       title: Test comment
       description: 
-      labels: '[\"web\",\"scheduled\"]'
+      labels: web, scheduled
       priority: 2
       due_string: today
       project_id: 2287192456
