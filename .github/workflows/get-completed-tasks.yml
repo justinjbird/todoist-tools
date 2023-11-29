@@ -44,7 +44,7 @@ jobs:
           echo "tasks=$output" >> "$GITHUB_OUTPUT"
 
           # output clean object to csv
-          ($output | ConvertFrom-Json).Items | Select-Object completed_on, content | Export-Csv -Path tasks.csv
+          ($output | ConvertFrom-Json).Items | Export-Csv -Path tasks.csv
 
         shell: pwsh
 
