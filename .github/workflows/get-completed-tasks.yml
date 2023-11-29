@@ -1,0 +1,36 @@
+name: todoist-get-completed-tasks
+
+on:
+  workflow_call:
+    inputs:
+      since:
+        type: string
+        description: 'Since when to get completed tasks'
+        required: true
+        default: 2007-4-29T00:00
+      until:
+        type: string
+        description: 'Until when to get completed tasks'
+        required: false
+        default: 2007-4-29T10:13
+      url:
+        type: string
+        description: 'URL of the Todoist API'
+        required: false
+        default: https://api.todoist.com/sync/v9/completed/get_all
+    secrets:
+      token:
+        required: true
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Completed Tasks
+        run: |                
+          $since = (get-date).AddDays(-14).ToString('yyyy-MM-dd')
+
+          # creates task, stores response in response.txt, collects response code in $output
+          $output = ((curl ${{ inputs.url }} -d since="${since}" -d limit=200 -H "Authorization: Bearer ${{ secrets.token }}") | ConvertFrom-Json).items
+          $output > output.txt
+        shell: pwsh
