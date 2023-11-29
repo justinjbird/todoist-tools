@@ -33,4 +33,5 @@ jobs:
           # creates task, stores response in response.txt, collects response code in $output
           $output = ((curl ${{ inputs.url }} -d since="${since}" -d limit=200 -H "Authorization: Bearer ${{ secrets.token }}") | ConvertFrom-Json).items
           $output >> $GITHUB_OUTPUT
+          Write-Host "$(($output | Measure).count) tasks returned"
         shell: pwsh
