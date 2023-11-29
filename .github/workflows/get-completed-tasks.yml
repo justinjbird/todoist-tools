@@ -7,12 +7,12 @@ on:
         type: string
         description: 'Since when to get completed tasks'
         required: true
-        default: 2007-4-29T00:00
+        default: 1900-01-01T00:00
       until:
         type: string
         description: 'Until when to get completed tasks'
         required: false
-        default: 2007-4-29T10:13
+        default: 1900-01-01T10:13
       url:
         type: string
         description: 'URL of the Todoist API'
@@ -29,17 +29,22 @@ jobs:
       - id: step1
         name: Get Completed Tasks
         run: |                
-          # set date range
-          $since = (get-date).AddDays(-14).ToString('yyyy-MM-dd')
+          # if dates not passed, default to 14 days ago and today
+          if ($since -eq '1900-01-01T00:00') {
+            $since = (get-date).AddDays(-14).ToString('yyyy-MM-dd')
+          }
+          if ($until -eq '1900-01-01T00:00') {
+            $until = (get-date).ToString('yyyy-MM-dd')
+          }
 
-          # creates task, stores response in response.txt, collects response code in $output
-          $output = ((curl ${{ inputs.url }} -d since="${since}" -d limit=200 -H "Authorization: Bearer ${{ secrets.token }}") | ConvertFrom-Json).items
+          # get tasks, save as json
+          $output = (curl ${{ inputs.url }} -d since="${since}" -d until="${until}" -d limit=200 -H "Authorization: Bearer ${{ secrets.token }}")
 
-          # set output to github output
+          # output string
           echo "tasks=$output" >> "$GITHUB_OUTPUT"
 
-          # save to csv
-          ($output | ConvertFrom-Json).Items | Export-Csv -Path tasks.csv
+          # output clean object to csv
+          ($output | ConvertFrom-Json).Items | Select-Object completed_on, content | Export-Csv -Path tasks.csv
 
         shell: pwsh
 
