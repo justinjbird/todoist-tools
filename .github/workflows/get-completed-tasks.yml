@@ -26,12 +26,18 @@ jobs:
   get-completed-tasks:
     runs-on: ubuntu-latest
     steps:
-      - name: Get Completed Tasks
+      - id: step1
+        name: Get Completed Tasks
         run: |                
+          # set date range
           $since = (get-date).AddDays(-14).ToString('yyyy-MM-dd')
 
           # creates task, stores response in response.txt, collects response code in $output
           $output = ((curl ${{ inputs.url }} -d since="${since}" -d limit=200 -H "Authorization: Bearer ${{ secrets.token }}") | ConvertFrom-Json).items
-          $output >> $GITHUB_OUTPUT
-          Write-Host "$(($output | Measure).count) tasks returned"
+
+          # set output to github output
+          echo "tasks=$output" >> "$GITHUB_OUTPUT"
+
         shell: pwsh
+    outputs:
+      tasks: ${{ steps.step1.outputs.tasks }}
