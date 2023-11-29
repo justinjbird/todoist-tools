@@ -1,4 +1,4 @@
-name: todoist-create-task
+name: create-task
 
 on:
   workflow_call:
@@ -26,7 +26,7 @@ on:
         required: true
 
 jobs:
-  notify:
+  create-task:
     runs-on: ubuntu-latest
     steps:
       - name: Create task in Todoist

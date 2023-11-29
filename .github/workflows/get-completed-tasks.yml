@@ -1,4 +1,4 @@
-name: todoist-get-completed-tasks
+name: get-completed-tasks
 
 on:
   workflow_call:
