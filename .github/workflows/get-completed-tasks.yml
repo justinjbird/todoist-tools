@@ -12,7 +12,7 @@ on:
         type: string
         description: 'Until when to get completed tasks'
         required: false
-        default: 1900-01-01T10:13
+        default: 1900-01-01T00:00
       url:
         type: string
         description: 'URL of the Todoist API'
@@ -30,21 +30,29 @@ jobs:
         name: Get Completed Tasks
         run: |                
           # if dates not passed, default to 14 days ago and today
-          if ($since -eq '1900-01-01T00:00') {
+          if ('${{ secrets.token }}' -eq '1900-01-01T00:00') {
             $since = (get-date).AddDays(-14).ToString('yyyy-MM-ddT00:00')
           }
-          if ($until -eq '1900-01-01T00:00') {
+          else {
+            $since = '${{ inputs.since }}'
+          }
+          if ('${{ inputs.until }}' -eq '1900-01-01T00:00') {
             $until = (get-date).AddDays(1).ToString('yyyy-MM-ddT00:00')
+          }
+          else {
+            $until = '${{ inputs.until }}'
           }
 
           # get tasks, save as json
           $output = (curl https://api.todoist.com/sync/v9/completed/get_all -d since="$($since)" -d until="$($until)" -d limit=200 -H "Authorization: Bearer ${{ secrets.token }}")
 
+          # output clean object to csv
+          ($output | ConvertFrom-Json).Items | Export-Csv -Path tasks.csv
+          
           # output string
           echo "tasks=$output" >> "$GITHUB_OUTPUT"
 
-          # output clean object to csv
-          ($output | ConvertFrom-Json).Items | Export-Csv -Path tasks.csv
+
 
         shell: pwsh
 
