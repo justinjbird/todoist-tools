@@ -38,6 +38,20 @@ jobs:
           # set output to github output
           echo "tasks=$output" >> "$GITHUB_OUTPUT"
 
+          # save to csv
+          ($output | ConvertFrom-Json).Items | Export-Csv -Path tasks.csv
+
         shell: pwsh
-    outputs:
-      tasks: ${{ steps.step1.outputs.tasks }}
+
+      - name: upload tasks.csv
+        uses: actions/upload-artifact@v2
+        with:
+          name: tasks.csv
+          path: tasks.csv
+
+      - name: upload response.txt
+        uses: actions/upload-artifact@v2
+        with:
+          name: response.txt
+          path: response.txt
+        if: success() || failure()
