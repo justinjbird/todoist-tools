@@ -6,7 +6,7 @@ on:
       since:
         type: string
         description: 'Since when to get completed tasks'
-        required: true
+        required: false
         default: 1900-01-01T00:00
       until:
         type: string
