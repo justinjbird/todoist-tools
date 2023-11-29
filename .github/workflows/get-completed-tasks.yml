@@ -1,3 +1,8 @@
+## notes
+## - can include project_id filter
+## - perhaps include handling of offset
+## https://developer.todoist.com/sync/v9/#get-all-completed-items
+
 name: get-completed-tasks
 
 on:
