@@ -61,20 +61,20 @@ jobs:
 
           # output clean object to csv
           if ($output) {
-            ($output | ConvertFrom-Json).Items | Where-Object %_ -like '*${{ inputs.filter }}*'| Export-Csv -Path tasks.csv
+            ($output | ConvertFrom-Json).Items | Where-Object content -like '*${{ inputs.filter }}*'| Export-Csv -Path tasks.csv
           }
           
           # output string
           echo "tasks=$output" >> "$GITHUB_OUTPUT"
         shell: pwsh
 
-      - name: upload tasks.csv
+      - name: upload tasks
         uses: actions/upload-artifact@v2
         with:
           name: tasks-${{ inputs.name }}.csv
           path: tasks.csv
 
-      - name: upload response.txt
+      - name: upload response
         uses: actions/upload-artifact@v2
         with:
           name: response-${{ inputs.name }}.txt
