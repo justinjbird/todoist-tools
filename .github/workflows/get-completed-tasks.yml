@@ -23,6 +23,10 @@ on:
         description: 'URL of the Todoist API'
         required: false
         default: https://api.todoist.com/sync/v9/completed/get_all
+      name:
+        type: string
+        description: 'Name of the person'
+        required: true
     secrets:
       token:
         required: true
@@ -64,11 +68,11 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: tasks.csv
-          path: tasks.csv
+          path: tasks-${{ inputs.name }}.csv
 
       - name: upload response.txt
         uses: actions/upload-artifact@v2
         with:
           name: response.txt
-          path: response.txt
+          path: response-${{ inputs.name }}.txt
         if: success() || failure()
