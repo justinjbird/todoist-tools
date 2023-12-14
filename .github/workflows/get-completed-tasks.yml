@@ -27,6 +27,10 @@ on:
         type: string
         description: 'Name of the person'
         required: true
+      filter:
+        type: string
+        description: 'Filter for the tasks'
+        required: false
     secrets:
       token:
         required: true
@@ -57,7 +61,7 @@ jobs:
 
           # output clean object to csv
           if ($output) {
-            ($output | ConvertFrom-Json).Items | Export-Csv -Path tasks.csv
+            ($output | ConvertFrom-Json).Items | Where-Object %_ -like '*${{ inputs.filter }}*'| Export-Csv -Path tasks.csv
           }
           
           # output string
