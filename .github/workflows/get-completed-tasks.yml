@@ -52,7 +52,10 @@ jobs:
           $output = (curl https://api.todoist.com/sync/v9/completed/get_all -d since="$($since)" -d until="$($until)" -d limit=200 -H "Authorization: Bearer ${{ secrets.token }}")
 
           # output clean object to csv
-          ($output | ConvertFrom-Json).Items | Export-Csv -Path tasks.csv
+          if ($output) {
+            ($output | ConvertFrom-Json).Items | Export-Csv -Path tasks.csv
+          }
+          
           
           # output string
           echo "tasks=$output" >> "$GITHUB_OUTPUT"
