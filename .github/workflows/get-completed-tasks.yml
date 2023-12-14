@@ -67,12 +67,12 @@ jobs:
       - name: upload tasks.csv
         uses: actions/upload-artifact@v2
         with:
-          name: tasks.csv
-          path: tasks-${{ inputs.name }}.csv
+          name: tasks-${{ inputs.name }}.csv
+          path: tasks.csv
 
       - name: upload response.txt
         uses: actions/upload-artifact@v2
         with:
-          name: response.txt
-          path: response-${{ inputs.name }}.txt
+          name: response-${{ inputs.name }}.txt
+          path: response.txt
         if: success() || failure()
